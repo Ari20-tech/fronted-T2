@@ -14,8 +14,6 @@ export class ClassroomService {
 
   constructor(private http: HttpClient) { }
 
-  // CRUD Básico
-// En tu servicio ClassroomService
   findAll() {
     return this.http.get<Classroom[]>(`${this.url}?expand=course,teacher,career`);
   }
@@ -36,7 +34,6 @@ export class ClassroomService {
     return this.http.delete(`${this.url}/${id}`);
   }
 
-  // Métodos de notificación (Subject)
   setClassroomChange(data: Classroom[]) {
     this.classroomChange.next(data);
   }
@@ -53,26 +50,21 @@ export class ClassroomService {
     return this.messageChange.asObservable();
   }
 
-  // Buscar aulas por profesor
-findByTeacher(teacherId: number) {
-  return this.http.get<Classroom[]>(`${this.url}/teacher/${teacherId}`);
-}
+  findByTeacher(teacherId: number) {
+    return this.http.get<Classroom[]>(`${this.url}/teacher/${teacherId}`);
+  }
 
-// Buscar aulas por curso
-findByCourse(courseId: number) {
-  return this.http.get<Classroom[]>(`${this.url}/course/${courseId}`);
-}
+  findByCourse(courseId: number) {
+    return this.http.get<Classroom[]>(`${this.url}/course/${courseId}`);
+  }
 
-// Buscar aulas por carrera y semestre
-findByCareerAndSemester(careerId: number, semester: string) {
-  return this.http.get<Classroom[]>(
-    `${this.url}/career/${careerId}/semester/${semester}`
-  );
-}
+  findByCareerAndSemester(careerId: number, semester: string) {
+    return this.http.get<Classroom[]>(
+      `${this.url}/career/${careerId}/semester/${semester}`
+    );
+  }
 
-// Buscar aulas por estado (activas/inactivas)
-findByStatus(status: boolean) {
-  return this.http.get<Classroom[]>(`${this.url}/status/${status}`);
-}
-
+  findByStatus(status: boolean) {
+    return this.http.get<Classroom[]>(`${this.url}/status/${status}`);
+  }
 }

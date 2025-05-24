@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -39,11 +39,28 @@ form: FormGroup;
   ngOnInit(): void{
     this.form = new FormGroup({
       idTeacher: new FormControl(),
-      code: new FormControl(''),
-      fatherLastname: new FormControl(''),
-      motherLastname: new FormControl(''),
-      firstName: new FormControl(''),
-      secondName: new FormControl('')
+      code: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[A-Z0-9]{5}$/), // Código de 5 caracteres alfanuméricos en mayúsculas
+      ]),
+      fatherLastname: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/)
+      ]),
+      motherLastname: new FormControl('', [
+        Validators.minLength(2),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/)
+      ]),
+      firstName: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/)
+      ]),
+      secondName: new FormControl('', [
+        Validators.minLength(3),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/)
+      ])
     });
 
     this.route.params.subscribe(data => {
@@ -54,16 +71,16 @@ form: FormGroup;
   }
 
 
-  initForm(){
-    if(this.isEdit){
+initForm() {
+    if (this.isEdit) {
       this.teacherService.findById(this.id).subscribe((data) => {
-        this.form = new FormGroup({
-          idTeacher: new FormControl(data.idTeacher),
-          code: new FormControl(data.code),
-          fatherLastname: new FormControl(data.fatherLastname),
-          motherLastname: new FormControl(data.motherLastname),
-          secondName: new FormControl(data.secondName),
-          firstName: new FormControl(data.firstName),
+        this.form.patchValue({  // Usar patchValue en lugar de crear nuevo FormGroup
+          idTeacher: data.idTeacher,
+          code: data.code,
+          fatherLastname: data.fatherLastname,
+          motherLastname: data.motherLastname,
+          secondName: data.secondName,
+          firstName: data.firstName
         });
       });
     }

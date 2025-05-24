@@ -6,14 +6,33 @@
     </div>
     
     <mat-form-field>
-        <input matInput placeholder="code" formControlName="code">
+        <input matInput 
+               placeholder="code" 
+               formControlName="code"
+               (input)="form.get('code')?.setValue(form.get('code')?.value.toUpperCase())"
+               required>
+        <mat-error *ngIf="form.get('code')?.hasError('required')">
+            El código es obligatorio
+        </mat-error>
+        <mat-error *ngIf="form.get('code')?.hasError('pattern')">
+            Formato inválido (solo mayúsculas y números)
+        </mat-error>
+        <mat-error *ngIf="form.get('code')?.hasError('maxlength')">
+            Máximo 5 caracteres
+        </mat-error>
     </mat-form-field>
 
     <mat-form-field>
-        <input matInput placeholder="name" formControlName="name">
+        <input matInput 
+               placeholder="name" 
+               formControlName="name"
+               required>
+        <mat-error *ngIf="form.get('name')?.hasError('required')">
+            El nombre es obligatorio
+        </mat-error>
     </mat-form-field>
 
-    <button mat-button type="submit">
+    <button mat-button type="submit" [disabled]="form.invalid">
         <mat-icon>done</mat-icon>
         <span>Done</span>
     </button>

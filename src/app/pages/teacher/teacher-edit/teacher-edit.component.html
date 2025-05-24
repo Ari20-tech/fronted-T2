@@ -4,27 +4,78 @@
             <input matInput placeholder="ID" formControlName="idTeacher">
         </mat-form-field>
     </div>
+
     <mat-form-field>
-        <input matInput placeholder="Code" formControlName="code">
+        <input matInput 
+               placeholder="Code" 
+               formControlName="code"
+               (input)="form.get('code')?.setValue(form.get('code')?.value.toUpperCase())"
+               required>
+        <mat-error *ngIf="form.get('code')?.hasError('required')">
+            Código obligatorio
+        </mat-error>
+        <mat-error *ngIf="form.get('code')?.hasError('pattern')">
+            Se aceptan solo 5 caracteres
+        </mat-error>
     </mat-form-field>
 
     <mat-form-field>
-        <input matInput placeholder="Father's Lastname" formControlName="fatherLastname">
+        <input matInput 
+               placeholder="Father's Lastname" 
+               formControlName="fatherLastname"
+               required>
+        <mat-error *ngIf="form.get('fatherLastname')?.hasError('required')">
+            Apellido paterno obligatorio
+        </mat-error>
+        <mat-error *ngIf="form.get('fatherLastname')?.hasError('pattern')">
+            Solo letras y espacios
+        </mat-error>
+        <mat-error *ngIf="form.get('fatherLastname')?.hasError('minlength')">
+            Mínimo 2 caracteres
+        </mat-error>
     </mat-form-field>
 
     <mat-form-field>
-        <input matInput placeholder="Mother's Lastname" formControlName="motherLastname">
+        <input matInput 
+               placeholder="Mother's Lastname" 
+               formControlName="motherLastname">
+        <mat-error *ngIf="form.get('motherLastname')?.hasError('pattern')">
+            Solo letras y espacios
+        </mat-error>
+        <mat-error *ngIf="form.get('motherLastname')?.hasError('minlength')">
+            Mínimo 2 caracteres
+        </mat-error>
     </mat-form-field>
 
     <mat-form-field>
-        <input matInput placeholder="First Name" formControlName="firstName">
+        <input matInput 
+               placeholder="First Name" 
+               formControlName="firstName"
+               required>
+        <mat-error *ngIf="form.get('firstName')?.hasError('required')">
+            Nombre obligatorio
+        </mat-error>
+        <mat-error *ngIf="form.get('firstName')?.hasError('pattern')">
+            Solo letras y espacios
+        </mat-error>
+        <mat-error *ngIf="form.get('firstName')?.hasError('minlength')">
+            Mínimo 3 caracteres
+        </mat-error>
     </mat-form-field>
 
     <mat-form-field>
-        <input matInput placeholder="Second Name" formControlName="secondName">
+        <input matInput 
+               placeholder="Second Name" 
+               formControlName="secondName">
+        <mat-error *ngIf="form.get('secondName')?.hasError('pattern')">
+            Solo letras y espacios
+        </mat-error>
+        <mat-error *ngIf="form.get('secondName')?.hasError('minlength')">
+            Mínimo 3 caracteres
+        </mat-error>
     </mat-form-field>
 
-    <button mat-button type="submit">
+    <button mat-button type="submit" [disabled]="form.invalid">
         <mat-icon>done</mat-icon>
         <span>Done</span>
     </button>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,6 +8,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Career } from '../../../model/career';
 import { CareerService } from '../../../services/career.service';
 import { switchMap } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-course-edit',
@@ -17,7 +18,8 @@ import { switchMap } from 'rxjs';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    RouterLink
+    RouterLink,
+    CommonModule
   ],
   templateUrl: './career-edit.component.html',
   styleUrl: './career-edit.component.css'
@@ -36,8 +38,16 @@ export class CareerEditComponent {
   ngOnInit(): void{
     this.form = new FormGroup({
       idCareer: new FormControl(), 
-      code: new FormControl(''),
-      name: new FormControl('')
+      code: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[A-Z0-9]{5}$/) // Código alfanumérico en mayúsculas
+      ]),
+      name: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/) // Solo letras y espacios
+      ])
     });
 
     this.route.params.subscribe(data => {
@@ -47,13 +57,13 @@ export class CareerEditComponent {
     });
   }
 
-  initForm(){
-    if(this.isEdit){
+  initForm() {
+    if (this.isEdit) {
       this.careerService.findById(this.id).subscribe((data) => {
-        this.form = new FormGroup({
-          idCareer: new FormControl(data.idCareer),
-          code: new FormControl(data.code),
-          name: new FormControl(data.name)
+        this.form.patchValue({ // Mantiene los validadores
+          idCareer: data.idCareer,
+          code: data.code,
+          name: data.name
         });
       });
     }

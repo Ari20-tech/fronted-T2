@@ -1,67 +1,97 @@
 <form class="example-container" [formGroup]="form" (submit)="operate()">
-    <!-- Campo oculto para ID -->
-    <div [hidden]="true">
-        <mat-form-field>
-            <input matInput placeholder="ID" formControlName="idClassroom">
-        </mat-form-field>
-    </div>
-    
     <!-- Campo NRC -->
     <mat-form-field>
-        <input matInput placeholder="NRC" formControlName="nrc">
+        <input matInput 
+                placeholder="NRC" 
+                formControlName="nrc"
+                required
+                (input)="form.get('nrc')?.setValue(form.get('nrc')?.value.toUpperCase())"> <!-- Opcional: Convertir a mayúsculas -->
+        <mat-error *ngIf="form.get('nrc')?.hasError('required')">
+            El NRC es obligatorio.
+        </mat-error>
+        <mat-error *ngIf="form.get('nrc')?.hasError('pattern')">
+            Debe tener 5 caracteres 
+        </mat-error>
     </mat-form-field>
 
-    <!-- Lista desplegable para Curso -->
+    <!-- Lista Curso -->
     <mat-form-field>
         <mat-label>Curso</mat-label>
-            <mat-select formControlName="idCourse"> <!-- Renombrar formControlName a "idCourse" -->
-                <mat-option *ngFor="let course of courses" [value]="course.idCourse">
-                    {{course.code}} - {{course.name}}
-                </mat-option>
-            </mat-select>
+        <mat-select formControlName="idCourse" required>
+            <mat-option *ngFor="let course of courses" [value]="course.idCourse">
+                {{course.code}} - {{course.name}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('idCourse')?.hasError('required')">
+            Seleccione un curso.
+        </mat-error>
     </mat-form-field>
 
-    <!-- Lista desplegable para Profesor -->
+    <!-- Lista Profesor -->
     <mat-form-field>
         <mat-label>Profesor</mat-label>
-        <mat-select formControlName="idTeacher">
+        <mat-select formControlName="idTeacher" required>
             <mat-option *ngFor="let teacher of teachers" [value]="teacher.idTeacher">
                 {{teacher.firstName}}, {{teacher.fatherLastname}}
             </mat-option>
         </mat-select>
+        <mat-error *ngIf="form.get('idTeacher')?.hasError('required')">
+            Seleccione un profesor.
+        </mat-error>
     </mat-form-field>
 
-    <!-- Lista desplegable para Carrera -->
+    <!-- Lista Carrera -->
     <mat-form-field>
         <mat-label>Carrera</mat-label>
-            <mat-select formControlName="idCareer">
-                <mat-option *ngFor="let career of careers" [value]="career.idCareer">
-                    {{career.name}}
-                </mat-option>
-            </mat-select>
+        <mat-select formControlName="idCareer" required>
+            <mat-option *ngFor="let career of careers" [value]="career.idCareer">
+                {{career.name}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('idCareer')?.hasError('required')">
+            Seleccione una carrera.
+        </mat-error>
     </mat-form-field>
 
     <!-- Campo Semestre -->
     <mat-form-field>
-        <input matInput placeholder="Semestre (Ej: 2024-1)" formControlName="semester">
+        <input matInput 
+               placeholder="Semestre (Ej: 2024-1)" 
+               formControlName="semester"
+               required>
+        <mat-error *ngIf="form.get('semester')?.hasError('required')">
+            El semestre es obligatorio.
+        </mat-error>
+        <mat-error *ngIf="form.get('semester')?.hasError('pattern')">
+            Formato válido: 2024-1
+        </mat-error>
     </mat-form-field>
 
     <!-- Campo Nivel -->
     <mat-form-field>
-        <input matInput type="number" placeholder="Nivel" formControlName="level">
+        <input matInput 
+               type="number" 
+               placeholder="Nivel" 
+               formControlName="level"
+               required>
+        <mat-error *ngIf="form.get('level')?.hasError('required')">
+            El nivel es obligatorio.
+        </mat-error>
+        <mat-error *ngIf="form.get('level')?.hasError('min') || form.get('level')?.hasError('max')">
+            El nivel debe estar entre 1 y 10.
+        </mat-error>
     </mat-form-field>
 
-    <!-- Checkbox para Estado -->
     <mat-checkbox formControlName="status">Activo</mat-checkbox>
 
-    <!-- Botones de acción -->
-    <button mat-button type="submit">
+    <!-- Botón Submit Deshabilitado si Formulario Inválido -->
+    <button mat-button type="submit" [disabled]="form.invalid">
         <mat-icon>done</mat-icon>
         <span>Guardar</span>
     </button>
 
-    <button mat-button type="button" routerLink="/pages/classroom">
+    <button mat-button type="button" routerLink="/pages/career">
         <mat-icon>cancel</mat-icon>
-        <span>Cancelar</span>
+        <span>Cancel</span>
     </button>
 </form>

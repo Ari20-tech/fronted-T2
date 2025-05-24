@@ -17,6 +17,8 @@ import { Teacher } from '../../../model/teacher';
 import { Career } from '../../../model/career';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
+import { Validators } from '@angular/forms'; 
+
 
 @Component({
   selector: 'app-classroom-edit',
@@ -72,16 +74,26 @@ export class ClassroomEditComponent {
   }
 
   initForm() {
-      this.form = new FormGroup({
-          idClassroom: new FormControl(),
-          nrc: new FormControl(''),
-          idCourse: new FormControl(null), // <-- Cambiar de "course" a "idCourse"
-          idTeacher: new FormControl(null), // <-- Cambiar de "teacher" a "idTeacher"
-          idCareer: new FormControl(null), // <-- Cambiar de "career" a "idCareer"
-          semester: new FormControl(''),
-          level: new FormControl(''),
-          status: new FormControl(true)
-      });
+    this.form = new FormGroup({
+      idClassroom: new FormControl(),
+      nrc: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[0-9]{5}$/) // 5 dígitos numéricos
+      ]),
+      idCourse: new FormControl(null, Validators.required),
+      idTeacher: new FormControl(null, Validators.required),
+      idCareer: new FormControl(null, Validators.required),
+      semester: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^20\d{2}-[1-2]$/) // Formato 2024-1 o 2023-2
+      ]),
+      level: new FormControl('', [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(10)
+      ]),
+      status: new FormControl(true, Validators.required)
+    });
   }
 
   loadClassroomData() {
@@ -89,8 +101,8 @@ export class ClassroomEditComponent {
       this.form.patchValue({
         idClassroom: data.idClassroom,
         nrc: data.nrc,
-        idCourse: data.idCourse.idCourse, // <-- Asignar el ID del curso
-        idTeacher: data.idTeacher.idTeacher, // <-- Asignar el ID del profesor
+        idCourse: data.idCourse.idCourse, 
+        idTeacher: data.idTeacher.idTeacher, 
         idCareer: data.idCareer.idCareer,
         semester: data.semester,
         level: data.level,
@@ -99,57 +111,53 @@ export class ClassroomEditComponent {
     });
   }
 
-operate() {
-    if (this.form.invalid) {
-        return; // No operar si el formulario es inválido
-    }
+  operate() {
+      if (this.form.invalid) {
+          return;
+      }
 
-    // Crear el objeto classroom asegurando que las propiedades coincidan con el backend
-    const classroom: Classroom = {
-        idClassroom: this.form.value.idClassroom,
-        nrc: this.form.value.nrc,
-        idCourse: this.form.value.idCourse, // <-- Usar idCourse
-        idTeacher: this.form.value.idTeacher, // <-- Usar idTeacher
-        idCareer: this.form.value.idCareer,
-        semester: this.form.value.semester,
-        level: this.form.value.level,
-        status: this.form.value.status
-    };
+      const classroom: Classroom = {
+          idClassroom: this.form.value.idClassroom,
+          nrc: this.form.value.nrc,
+          idCourse: this.form.value.idCourse,
+          idTeacher: this.form.value.idTeacher,
+          idCareer: this.form.value.idCareer,
+          semester: this.form.value.semester,
+          level: this.form.value.level,
+          status: this.form.value.status
+      };
 
-    if (this.isEdit) {
-        this.classroomService.update(this.id, classroom).subscribe({
-            next: () => {
-                this.classroomService.findAll().subscribe({
-                    next: (data) => {
-                        this.classroomService.setClassroomChange(data);
-                        this.classroomService.setMessageChange('AULA ACTUALIZADA!');
-                        this.router.navigate(['pages/classroom']);
-                    },
-                    error: (err) => {
-                        console.error('Error al cargar aulas:', err);
-                        // Puedes mostrar un mensaje de error al usuario
-                    }
-                });
-            },
-            error: (err) => {
-                console.error('Error al actualizar aula:', err);
-                // Puedes mostrar un mensaje de error al usuario
-            }
-        });
-    } else {
-        this.classroomService.save(classroom).pipe(
-            switchMap(() => this.classroomService.findAll())
-        ).subscribe({
-            next: (data) => {
-                this.classroomService.setClassroomChange(data);
-                this.classroomService.setMessageChange('AULA CREADA!');
-                this.router.navigate(['pages/classroom']);
-            },
-            error: (err) => {
-                console.error('Error al crear aula:', err);
-                // Puedes mostrar un mensaje de error al usuario
-            }
-        });
-    }
-}
+      if (this.isEdit) {
+          this.classroomService.update(this.id, classroom).subscribe({
+              next: () => {
+                  this.classroomService.findAll().subscribe({
+                      next: (data) => {
+                          this.classroomService.setClassroomChange(data);
+                          this.classroomService.setMessageChange('AULA ACTUALIZADA!');
+                          this.router.navigate(['pages/classroom']);
+                      },
+                      error: (err) => {
+                          console.error('Error al cargar aulas:', err);
+                      }
+                  });
+              },
+              error: (err) => {
+                  console.error('Error al actualizar aula:', err);
+              }
+          });
+      } else {
+          this.classroomService.save(classroom).pipe(
+              switchMap(() => this.classroomService.findAll())
+          ).subscribe({
+              next: (data) => {
+                  this.classroomService.setClassroomChange(data);
+                  this.classroomService.setMessageChange('AULA CREADA!');
+                  this.router.navigate(['pages/classroom']);
+              },
+              error: (err) => {
+                  console.error('Error al crear aula:', err);
+              }
+          });
+      }
+  }
 }

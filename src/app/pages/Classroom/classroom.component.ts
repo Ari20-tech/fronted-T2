@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { switchMap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,6 +17,7 @@ import { CareerService } from '../../services/career.service';
 import { Course } from '../../model/course';
 import { Teacher } from '../../model/teacher';
 import { Career } from '../../model/career'
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-classroom',
@@ -32,7 +33,8 @@ import { Career } from '../../model/career'
     RouterOutlet,
     RouterLink,
     MatSnackBarModule,
-    MatButtonModule
+    MatButtonModule,
+    CommonModule
   ],
   templateUrl: './classroom.component.html',
   styleUrl: './classroom.component.css'
@@ -67,7 +69,7 @@ export class ClassroomComponent {
   ) {}
 
   ngOnInit(): void {
-    this.loadDependencies(); // <-- Cargar cursos, profesores y carreras    
+    this.loadDependencies(); 
     this.classroomService.getClassroomChange().subscribe(data => this.createTable(data));
     this.loadClassrooms();
     
@@ -117,24 +119,23 @@ export class ClassroomComponent {
       });
   }
 
-// En classroom.component.ts
-formatRelation(id: number, type: 'course' | 'teacher' | 'career'): string {
-  let entity;
-  switch (type) {
-    case 'course':
-      entity = this.courses.find(c => c.idCourse === id);
-      break;
-    case 'teacher':
-      entity = this.teachers.find(t => t.idTeacher === id);
-      break;
-    case 'career':
-      entity = this.careers.find(c => c.idCareer === id);
-      break;
-    default:
-      return '';
+  formatRelation(id: number, type: 'course' | 'teacher' | 'career'): string {
+    let entity;
+    switch (type) {
+      case 'course':
+        entity = this.courses.find(c => c.idCourse === id);
+        break;
+      case 'teacher':
+        entity = this.teachers.find(t => t.idTeacher === id);
+        break;
+      case 'career':
+        entity = this.careers.find(c => c.idCareer === id);
+        break;
+      default:
+        return '';
+    }
+    return entity ? entity.name : 'No encontrado';
   }
-  return entity ? entity.name : 'No encontrado';
-}
 
   formatStatus(status: boolean): string {
     return status ? 'Activo' : 'Inactivo';
