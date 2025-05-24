@@ -5,4 +5,5 @@ export class Teacher{
     fatherLastname: string;
     firstName: string;
     secondName: string;
+    
 }

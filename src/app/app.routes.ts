@@ -6,6 +6,7 @@ import { TeacherEditComponent } from './pages/teacher/teacher-edit/teacher-edit.
 import { CareerComponent } from './pages/career/career.component';
 import { CareerEditComponent } from './pages/career/career-edit/career-edit.component';
 import { ClassroomComponent } from './pages/Classroom/classroom.component';
+import { ClassroomEditComponent } from './pages/Classroom/classroom-edit/classroom-edit.component';
 
 export const routes: Routes = [
     {
@@ -30,8 +31,8 @@ export const routes: Routes = [
     ,
      { path: 'pages/classroom', 
         component: ClassroomComponent, children: [
-            { path: 'new', component: CareerEditComponent },
-            { path: 'edit/:id', component: CareerEditComponent },
+            { path: 'new', component: ClassroomEditComponent },
+            { path: 'edit/:id', component: ClassroomEditComponent },
         ], 
     },
 ];

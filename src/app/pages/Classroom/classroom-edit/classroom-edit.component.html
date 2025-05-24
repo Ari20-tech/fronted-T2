@@ -1,0 +1,67 @@
+<form class="example-container" [formGroup]="form" (submit)="operate()">
+    <!-- Campo oculto para ID -->
+    <div [hidden]="true">
+        <mat-form-field>
+            <input matInput placeholder="ID" formControlName="idClassroom">
+        </mat-form-field>
+    </div>
+    
+    <!-- Campo NRC -->
+    <mat-form-field>
+        <input matInput placeholder="NRC" formControlName="nrc">
+    </mat-form-field>
+
+    <!-- Lista desplegable para Curso -->
+    <mat-form-field>
+        <mat-label>Curso</mat-label>
+        <mat-select formControlName="Course">
+            <mat-option *ngFor="let course of courses" [value]="course">
+                {{course.code}} - {{course.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <!-- Lista desplegable para Profesor -->
+    <mat-form-field>
+        <mat-label>Profesor</mat-label>
+        <mat-select formControlName="Teacher">
+            <mat-option *ngFor="let teacher of teachers" [value]="teacher">
+                {{teacher.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <!-- Lista desplegable para Carrera -->
+    <mat-form-field>
+        <mat-label>Carrera</mat-label>
+        <mat-select formControlName="Career">
+            <mat-option *ngFor="let career of careers" [value]="career">
+                {{career.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <!-- Campo Semestre -->
+    <mat-form-field>
+        <input matInput placeholder="Semestre (Ej: 2024-1)" formControlName="semester">
+    </mat-form-field>
+
+    <!-- Campo Nivel -->
+    <mat-form-field>
+        <input matInput type="number" placeholder="Nivel" formControlName="level">
+    </mat-form-field>
+
+    <!-- Checkbox para Estado -->
+    <mat-checkbox formControlName="status">Activo</mat-checkbox>
+
+    <!-- Botones de acción -->
+    <button mat-button type="submit">
+        <mat-icon>done</mat-icon>
+        <span>Guardar</span>
+    </button>
+
+    <button mat-button type="button" routerLink="/pages/classroom">
+        <mat-icon>cancel</mat-icon>
+        <span>Cancelar</span>
+    </button>
+</form>
