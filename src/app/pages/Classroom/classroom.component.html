@@ -1,0 +1,87 @@
+<router-outlet/>
+
+<mat-form-field>
+  <mat-label>Filtrar</mat-label>
+  <input
+    matInput
+    (keyup)="applyFilter($event)"
+    placeholder="Ej. MAT101, Ingeniería, 2024-1"
+    #input
+  />
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <!-- NRC Column -->
+    <ng-container matColumnDef="nrc">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>NRC</th>
+      <td mat-cell *matCellDef="let row">{{ row.nrc }}</td>
+    </ng-container>
+
+    <!-- Course Column -->
+    <ng-container matColumnDef="course">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso</th>
+      <td mat-cell *matCellDef="let row">{{ formatRelation(row.course) }}</td>
+    </ng-container>
+
+    <!-- Teacher Column -->
+    <ng-container matColumnDef="teacher">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Profesor</th>
+      <td mat-cell *matCellDef="let row">{{ formatRelation(row.teacher) }}</td>
+    </ng-container>
+
+    <!-- Career Column -->
+    <ng-container matColumnDef="career">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Carrera</th>
+      <td mat-cell *matCellDef="let row">{{ formatRelation(row.career) }}</td>
+    </ng-container>
+
+    <!-- Semester Column -->
+    <ng-container matColumnDef="semester">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Semestre</th>
+      <td mat-cell *matCellDef="let row">{{ row.semester }}</td>
+    </ng-container>
+
+    <!-- Level Column -->
+    <ng-container matColumnDef="level">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nivel</th>
+      <td mat-cell *matCellDef="let row">{{ row.level }}</td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+      <td mat-cell *matCellDef="let row">{{ formatStatus(row.status) }}</td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-button [routerLink]="['edit', row.idClassroom]">
+          <mat-icon>mode_edit</mat-icon> Editar
+        </button>
+        <button mat-button (click)="delete(row.idClassroom)">
+          <mat-icon>delete</mat-icon> Eliminar
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="getDisplayedColumns()"></tr>
+    <tr mat-row *matRowDef="let row; columns: getDisplayedColumns()"></tr>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="8">No se encontraron aulas con el filtro "{{input.value}}"</td>
+    </tr>
+  </table>
+</div>
+
+<mat-paginator
+  [pageSizeOptions]="[10, 25, 50, 100]"
+  aria-label="Seleccione página de aulas">
+</mat-paginator>
+
+<button mat-fab style="float: right" routerLink="/pages/classroom/new">
+  <mat-icon>add</mat-icon>
+</button>

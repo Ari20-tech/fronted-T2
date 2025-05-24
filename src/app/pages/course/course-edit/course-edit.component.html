@@ -1,0 +1,25 @@
+<form class="example-container" [formGroup]="form" (submit)="operate()">
+    <div [hidden]="true">
+        <mat-form-field>
+            <input matInput placeholder="ID" formControlName="idCourse">
+        </mat-form-field>
+    </div>
+    
+    <mat-form-field>
+        <input matInput placeholder="code" formControlName="code">
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput placeholder="name" formControlName="name">
+    </mat-form-field>
+
+    <button mat-button type="submit">
+        <mat-icon>done</mat-icon>
+        <span>Done</span>
+    </button>
+
+    <button mat-button type="button" routerLink="/pages/course">
+        <mat-icon>cancel</mat-icon>
+        <span>Cancel</span>
+    </button>
+</form>
