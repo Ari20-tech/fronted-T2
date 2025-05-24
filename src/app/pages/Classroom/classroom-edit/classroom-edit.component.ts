@@ -15,6 +15,8 @@ import { switchMap } from 'rxjs';
 import { Course } from '../../../model/course';
 import { Teacher } from '../../../model/teacher';
 import { Career } from '../../../model/career';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-classroom-edit',
@@ -26,7 +28,9 @@ import { Career } from '../../../model/career';
     MatButtonModule,
     MatIconModule,
     MatSelectModule,
-    RouterLink
+    RouterLink,
+    MatCheckboxModule,
+    CommonModule
   ],
   templateUrl: './classroom-edit.component.html',
   styleUrls: ['./classroom-edit.component.css']
@@ -68,16 +72,16 @@ export class ClassroomEditComponent {
   }
 
   initForm() {
-    this.form = new FormGroup({
-      idClassroom: new FormControl(),
-      nrc: new FormControl(''),
-      Course: new FormControl(null),
-      Teacher: new FormControl(null),
-      Career: new FormControl(null),
-      semester: new FormControl(''),
-      level: new FormControl(''),
-      status: new FormControl(true)
-    });
+      this.form = new FormGroup({
+          idClassroom: new FormControl(),
+          nrc: new FormControl(''),
+          idCourse: new FormControl(null), // <-- Cambiar de "course" a "idCourse"
+          idTeacher: new FormControl(null), // <-- Cambiar de "teacher" a "idTeacher"
+          idCareer: new FormControl(null), // <-- Cambiar de "career" a "idCareer"
+          semester: new FormControl(''),
+          level: new FormControl(''),
+          status: new FormControl(true)
+      });
   }
 
   loadClassroomData() {
@@ -85,9 +89,9 @@ export class ClassroomEditComponent {
       this.form.patchValue({
         idClassroom: data.idClassroom,
         nrc: data.nrc,
-        Course: data.Course,
-        Teacher: data.Teacher,
-        Career: data.Career,
+        idCourse: data.idCourse.idCourse, // <-- Asignar el ID del curso
+        idTeacher: data.idTeacher.idTeacher, // <-- Asignar el ID del profesor
+        idCareer: data.idCareer.idCareer,
         semester: data.semester,
         level: data.level,
         status: data.status
@@ -95,27 +99,57 @@ export class ClassroomEditComponent {
     });
   }
 
-  operate() {
-    const classroom: Classroom = {
-      ...this.form.value
-    };
-
-    if(this.isEdit) {
-      this.classroomService.update(this.id, classroom).subscribe(() => {
-        this.classroomService.findAll().subscribe(data => {
-          this.classroomService.setClassroomChange(data);
-          this.classroomService.setMessageChange('AULA ACTUALIZADA!');
-        });
-      });
-    } else {
-      this.classroomService.save(classroom)
-        .pipe(switchMap(() => this.classroomService.findAll()))
-        .subscribe(data => {
-          this.classroomService.setClassroomChange(data);
-          this.classroomService.setMessageChange('AULA CREADA!');
-        });
+operate() {
+    if (this.form.invalid) {
+        return; // No operar si el formulario es inválido
     }
 
-    this.router.navigate(['pages/classroom']);
-  }
+    // Crear el objeto classroom asegurando que las propiedades coincidan con el backend
+    const classroom: Classroom = {
+        idClassroom: this.form.value.idClassroom,
+        nrc: this.form.value.nrc,
+        idCourse: this.form.value.idCourse, // <-- Usar idCourse
+        idTeacher: this.form.value.idTeacher, // <-- Usar idTeacher
+        idCareer: this.form.value.idCareer,
+        semester: this.form.value.semester,
+        level: this.form.value.level,
+        status: this.form.value.status
+    };
+
+    if (this.isEdit) {
+        this.classroomService.update(this.id, classroom).subscribe({
+            next: () => {
+                this.classroomService.findAll().subscribe({
+                    next: (data) => {
+                        this.classroomService.setClassroomChange(data);
+                        this.classroomService.setMessageChange('AULA ACTUALIZADA!');
+                        this.router.navigate(['pages/classroom']);
+                    },
+                    error: (err) => {
+                        console.error('Error al cargar aulas:', err);
+                        // Puedes mostrar un mensaje de error al usuario
+                    }
+                });
+            },
+            error: (err) => {
+                console.error('Error al actualizar aula:', err);
+                // Puedes mostrar un mensaje de error al usuario
+            }
+        });
+    } else {
+        this.classroomService.save(classroom).pipe(
+            switchMap(() => this.classroomService.findAll())
+        ).subscribe({
+            next: (data) => {
+                this.classroomService.setClassroomChange(data);
+                this.classroomService.setMessageChange('AULA CREADA!');
+                this.router.navigate(['pages/classroom']);
+            },
+            error: (err) => {
+                console.error('Error al crear aula:', err);
+                // Puedes mostrar un mensaje de error al usuario
+            }
+        });
+    }
+}
 }

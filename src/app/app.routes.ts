@@ -28,8 +28,7 @@ export const routes: Routes = [
             { path: 'edit/:id', component: CareerEditComponent },
         ], 
     },
-    ,
-     { path: 'pages/classroom', 
+    { path: 'pages/classroom', 
         component: ClassroomComponent, children: [
             { path: 'new', component: ClassroomEditComponent },
             { path: 'edit/:id', component: ClassroomEditComponent },

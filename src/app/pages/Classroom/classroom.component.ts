@@ -11,9 +11,16 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { switchMap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
+import { CourseService } from '../../services/course.service';
+import { TeacherService } from '../../services/teacher.service';
+import { CareerService } from '../../services/career.service';
+import { Course } from '../../model/course';
+import { Teacher } from '../../model/teacher';
+import { Career } from '../../model/career'
 
 @Component({
   selector: 'app-classroom',
+  standalone: true, 
   imports: [
     MatTableModule,
     MatIconModule,
@@ -33,6 +40,10 @@ import { MatButtonModule } from '@angular/material/button';
 export class ClassroomComponent {
   dataSource: MatTableDataSource<Classroom>;
   
+  courses: Course[] = [];
+  teachers: Teacher[] = [];
+  careers: Career[] = [];
+  
   columnsDefinitions = [
     { def: 'nrc', label: 'NRC', hide: false },
     { def: 'course', label: 'Curso', hide: false },
@@ -49,14 +60,17 @@ export class ClassroomComponent {
 
   constructor(
     private classroomService: ClassroomService,
+    private courseService: CourseService,
+    private teacherService: TeacherService,
+    private careerService: CareerService,
     private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
+    this.loadDependencies(); // <-- Cargar cursos, profesores y carreras    
+    this.classroomService.getClassroomChange().subscribe(data => this.createTable(data));
     this.loadClassrooms();
     
-    this.classroomService.getClassroomChange().subscribe(data => this.createTable(data));
-  
     this.classroomService.getMessageChange().subscribe(
       data => this._snackBar.open(data, 'INFO', { 
         duration: 2000, 
@@ -64,6 +78,12 @@ export class ClassroomComponent {
         verticalPosition: 'bottom' 
       })
     );
+  }
+
+  loadDependencies() {
+  this.courseService.findAll().subscribe(data => this.courses = data);
+  this.teacherService.findAll().subscribe(data => this.teachers = data);
+  this.careerService.findAll().subscribe(data => this.careers = data);
   }
 
   loadClassrooms() {
@@ -97,9 +117,24 @@ export class ClassroomComponent {
       });
   }
 
-  formatRelation(obj: any): string {
-    return obj ? `${obj.name || obj.code || obj.nrc}` : '';
+// En classroom.component.ts
+formatRelation(id: number, type: 'course' | 'teacher' | 'career'): string {
+  let entity;
+  switch (type) {
+    case 'course':
+      entity = this.courses.find(c => c.idCourse === id);
+      break;
+    case 'teacher':
+      entity = this.teachers.find(t => t.idTeacher === id);
+      break;
+    case 'career':
+      entity = this.careers.find(c => c.idCareer === id);
+      break;
+    default:
+      return '';
   }
+  return entity ? entity.name : 'No encontrado';
+}
 
   formatStatus(status: boolean): string {
     return status ? 'Activo' : 'Inactivo';

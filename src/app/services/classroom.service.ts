@@ -8,15 +8,16 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class ClassroomService {
-  private url: string = `${environment.HOST}/classrooms`;
+  private url: string = `${environment.HOST}/classroom`;
   private classroomChange: Subject<Classroom[]> = new Subject<Classroom[]>();
   private messageChange: Subject<string> = new Subject<string>();
 
   constructor(private http: HttpClient) { }
 
   // CRUD Básico
+// En tu servicio ClassroomService
   findAll() {
-    return this.http.get<Classroom[]>(this.url);
+    return this.http.get<Classroom[]>(`${this.url}?expand=course,teacher,career`);
   }
 
   findById(id: number) {
@@ -73,4 +74,5 @@ findByCareerAndSemester(careerId: number, semester: string) {
 findByStatus(status: boolean) {
   return this.http.get<Classroom[]>(`${this.url}/status/${status}`);
 }
+
 }

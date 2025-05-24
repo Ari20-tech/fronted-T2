@@ -8,17 +8,20 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TeacherService } from '../../../services/teacher.service';
 import { Teacher } from '../../../model/teacher';
 import { switchMap } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-course-edit',
+  selector: 'app-teacher-edit',
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    RouterLink
+    RouterLink,
+    CommonModule
   ],
+  standalone:true,
   templateUrl: './teacher-edit.component.html',
   styleUrl: './teacher-edit.component.css'
 })
@@ -35,7 +38,7 @@ form: FormGroup;
 
   ngOnInit(): void{
     this.form = new FormGroup({
-      idTeacher: new FormControl(0),
+      idTeacher: new FormControl(),
       code: new FormControl(''),
       fatherLastname: new FormControl(''),
       motherLastname: new FormControl(''),

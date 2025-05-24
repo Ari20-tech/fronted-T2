@@ -14,19 +14,19 @@
     <!-- Lista desplegable para Curso -->
     <mat-form-field>
         <mat-label>Curso</mat-label>
-        <mat-select formControlName="Course">
-            <mat-option *ngFor="let course of courses" [value]="course">
-                {{course.code}} - {{course.name}}
-            </mat-option>
-        </mat-select>
+            <mat-select formControlName="idCourse"> <!-- Renombrar formControlName a "idCourse" -->
+                <mat-option *ngFor="let course of courses" [value]="course.idCourse">
+                    {{course.code}} - {{course.name}}
+                </mat-option>
+            </mat-select>
     </mat-form-field>
 
     <!-- Lista desplegable para Profesor -->
     <mat-form-field>
         <mat-label>Profesor</mat-label>
-        <mat-select formControlName="Teacher">
-            <mat-option *ngFor="let teacher of teachers" [value]="teacher">
-                {{teacher.name}}
+        <mat-select formControlName="idTeacher">
+            <mat-option *ngFor="let teacher of teachers" [value]="teacher.idTeacher">
+                {{teacher.firstName}}, {{teacher.fatherLastname}}
             </mat-option>
         </mat-select>
     </mat-form-field>
@@ -34,11 +34,11 @@
     <!-- Lista desplegable para Carrera -->
     <mat-form-field>
         <mat-label>Carrera</mat-label>
-        <mat-select formControlName="Career">
-            <mat-option *ngFor="let career of careers" [value]="career">
-                {{career.name}}
-            </mat-option>
-        </mat-select>
+            <mat-select formControlName="idCareer">
+                <mat-option *ngFor="let career of careers" [value]="career.idCareer">
+                    {{career.name}}
+                </mat-option>
+            </mat-select>
     </mat-form-field>
 
     <!-- Campo Semestre -->

@@ -21,19 +21,24 @@
     <!-- Course Column -->
     <ng-container matColumnDef="course">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso</th>
-      <td mat-cell *matCellDef="let row">{{ formatRelation(row.course) }}</td>
+      <td mat-cell *matCellDef="let row">
+        {{ formatRelation(row.idCourse, 'course') }} <!-- Pasa el ID y el tipo -->
+      </td>
     </ng-container>
-
     <!-- Teacher Column -->
     <ng-container matColumnDef="teacher">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Profesor</th>
-      <td mat-cell *matCellDef="let row">{{ formatRelation(row.teacher) }}</td>
+      <td mat-cell *matCellDef="let row">
+        {{ formatRelation(row.idTeacher, 'teacher') }}
+      </td>
     </ng-container>
 
     <!-- Career Column -->
     <ng-container matColumnDef="career">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Carrera</th>
-      <td mat-cell *matCellDef="let row">{{ formatRelation(row.career) }}</td>
+      <td mat-cell *matCellDef="let row">
+        {{ formatRelation(row.idCareer, 'career') }}
+      </td>
     </ng-container>
 
     <!-- Semester Column -->
