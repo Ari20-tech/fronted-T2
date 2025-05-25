@@ -97,20 +97,21 @@ export class ClassroomEditComponent {
     });
   }
 
-  loadClassroomData() {
-    this.classroomService.findById(this.id).subscribe((data) => {
-      this.form.patchValue({
-        idClassroom: data.idClassroom,
-        nrc: data.nrc,
-        idCourse: data.idCourse.idCourse, 
-        idTeacher: data.idTeacher.idTeacher, 
-        idCareer: data.idCareer.idCareer,
-        semester: data.semester,
-        level: data.level,
-        status: data.status
-      });
+loadClassroomData() {
+  this.classroomService.findById(this.id).subscribe((data) => {
+    
+    this.form.patchValue({
+      idClassroom: data.idClassroom,
+      nrc: data.nrc,
+      idCourse: data.idCourse?.idCourse || data.idCourse, 
+      idTeacher: data.idTeacher?.idTeacher || data.idTeacher, 
+      idCareer: data.idCareer?.idCareer || data.idCareer,
+      semester: data.semester,
+      level: data.level,
+      status: data.status
     });
-  }
+  });
+}
 
   operate() {
       if (this.form.invalid) {
