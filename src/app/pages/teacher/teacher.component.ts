@@ -11,6 +11,9 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { switchMap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
+import { ConfirmationDeleteComponent } from './confirmation-delete/confirmation-delete.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-teacher',
@@ -25,7 +28,9 @@ import { MatButtonModule } from '@angular/material/button';
     RouterOutlet,
     RouterLink,
     MatSnackBarModule,
-    MatButtonModule
+    MatButtonModule,
+    CommonModule,
+    MatDialogModule
   ],
   templateUrl: './teacher.component.html',
   styleUrls: ['./teacher.component.css']
@@ -45,7 +50,8 @@ export class TeacherComponent {
 
   constructor(
     private teacherService: TeacherService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -66,17 +72,15 @@ export class TeacherComponent {
     this.teacherService.findAll().subscribe(data => this.createTable(data));
   }
 
-
   createTable(data: Teacher[]) {
-    this.dataSource = new MatTableDataSource(data);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    
-    // Agregar propiedad computada para fullName a cada elemento
-    this.dataSource.data = this.dataSource.data.map(teacher => ({
+    const teachersWithFullName = data.map(teacher => ({
       ...teacher,
       fullName: `${teacher.fatherLastname} ${teacher.motherLastname}, ${teacher.firstName} ${teacher.secondName}`
     }));
+    
+    this.dataSource = new MatTableDataSource(teachersWithFullName);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   getDisplayedColumns(): string[] {
@@ -88,12 +92,20 @@ export class TeacherComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  delete(id: number) {
-    this.teacherService.delete(id)
-      .pipe(switchMap(() => this.teacherService.findAll()))
-      .subscribe(data => {
-        this.teacherService.setTeacherChange(data);
-        this.teacherService.setMessageChange('¡Profesor eliminado!');
-      });
+  delete(id: number, fullName: string) {
+    const dialogRef = this.dialog.open(ConfirmationDeleteComponent, {
+      data: { name: fullName }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.teacherService.delete(id)
+          .pipe(switchMap(() => this.teacherService.findAll()))
+          .subscribe(data => {
+            this.teacherService.setTeacherChange(data);
+            this.teacherService.setMessageChange('¡Profesor eliminado correctamente!');
+          });
+      }
+    });
   }
 }

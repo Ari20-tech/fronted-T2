@@ -31,10 +31,10 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
       <td mat-cell *matCellDef="let row">
         <button mat-button [routerLink]="['edit', row.idCareer]">
-          <mat-icon>mode_edit</mat-icon> Edit
+          <mat-icon>mode_edit</mat-icon> Editar
         </button>
-        <button mat-button (click)="delete(row.idCareer)">
-          <mat-icon>delete</mat-icon> Delete
+        <button mat-button (click)="delete(row.idCareer, row.name)">
+          <mat-icon>delete</mat-icon> Eliminar
         </button>
       </td>
     </ng-container>

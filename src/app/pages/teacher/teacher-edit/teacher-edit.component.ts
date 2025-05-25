@@ -41,7 +41,7 @@ form: FormGroup;
       idTeacher: new FormControl(),
       code: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^[A-Z0-9]{5}$/), // Código de 5 caracteres alfanuméricos en mayúsculas
+        Validators.pattern(/^[A-Z0-9]{5}$/), 
       ]),
       fatherLastname: new FormControl('', [
         Validators.required,
@@ -74,7 +74,7 @@ form: FormGroup;
 initForm() {
     if (this.isEdit) {
       this.teacherService.findById(this.id).subscribe((data) => {
-        this.form.patchValue({  // Usar patchValue en lugar de crear nuevo FormGroup
+        this.form.patchValue({  
           idTeacher: data.idTeacher,
           code: data.code,
           fatherLastname: data.fatherLastname,

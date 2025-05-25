@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 import { Validators } from '@angular/forms'; 
 
 
+
 @Component({
   selector: 'app-classroom-edit',
   standalone: true,
@@ -78,14 +79,14 @@ export class ClassroomEditComponent {
       idClassroom: new FormControl(),
       nrc: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^[0-9]{5}$/) // 5 dígitos numéricos
+        Validators.pattern(/^[0-9]{5}$/)
       ]),
       idCourse: new FormControl(null, Validators.required),
       idTeacher: new FormControl(null, Validators.required),
       idCareer: new FormControl(null, Validators.required),
       semester: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^20\d{2}-[1-2]$/) // Formato 2024-1 o 2023-2
+        Validators.pattern(/^20\d{2}-[1-2]$/) 
       ]),
       level: new FormControl('', [
         Validators.required,

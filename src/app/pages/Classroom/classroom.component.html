@@ -1,31 +1,30 @@
 <router-outlet/>
 
 <mat-form-field>
-  <mat-label>Filtrar</mat-label>
+  <mat-label>Filtrado por nrc</mat-label>
   <input
     matInput
     (keyup)="applyFilter($event)"
-    placeholder="Ej. Ingeniería"
+    placeholder="Busqueda por Nrc"
     #input
   />
 </mat-form-field>
 
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort>
-    <!-- NRC Column -->
+
     <ng-container matColumnDef="nrc">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>NRC</th>
       <td mat-cell *matCellDef="let row">{{ row.nrc }}</td>
     </ng-container>
 
-    <!-- Course Column -->
     <ng-container matColumnDef="course">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Curso</th>
       <td mat-cell *matCellDef="let row">
-        {{ formatRelation(row.idCourse, 'course') }} <!-- Pasa el ID y el tipo -->
+        {{ formatRelation(row.idCourse, 'course') }} 
       </td>
     </ng-container>
-    <!-- Teacher Column -->
+
     <ng-container matColumnDef="teacher">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Profesor</th>
       <td mat-cell *matCellDef="let row">
@@ -33,7 +32,6 @@
       </td>
     </ng-container>
 
-    <!-- Career Column -->
     <ng-container matColumnDef="career">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Carrera</th>
       <td mat-cell *matCellDef="let row">
@@ -41,32 +39,29 @@
       </td>
     </ng-container>
 
-    <!-- Semester Column -->
     <ng-container matColumnDef="semester">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Semestre</th>
       <td mat-cell *matCellDef="let row">{{ row.semester }}</td>
     </ng-container>
 
-    <!-- Level Column -->
     <ng-container matColumnDef="level">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Nivel</th>
       <td mat-cell *matCellDef="let row">{{ row.level }}</td>
     </ng-container>
 
-    <!-- Status Column -->
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
       <td mat-cell *matCellDef="let row">{{ formatStatus(row.status) }}</td>
     </ng-container>
 
-    <!-- Actions Column -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Acciones</th>
       <td mat-cell *matCellDef="let row">
         <button mat-button [routerLink]="['edit', row.idClassroom]">
           <mat-icon>mode_edit</mat-icon> Editar
         </button>
-        <button mat-button (click)="delete(row.idClassroom)">
+        
+        <button mat-button (click)="delete(row.idClassroom, row.nrc)">
           <mat-icon>delete</mat-icon> Eliminar
         </button>
       </td>

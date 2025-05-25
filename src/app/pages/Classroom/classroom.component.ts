@@ -18,6 +18,8 @@ import { Course } from '../../model/course';
 import { Teacher } from '../../model/teacher';
 import { Career } from '../../model/career'
 import { CommonModule } from '@angular/common';
+import { ConfirmationDeleteComponent } from './confirmation-delete/confirmation-delete.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-classroom',
@@ -34,7 +36,8 @@ import { CommonModule } from '@angular/common';
     RouterLink,
     MatSnackBarModule,
     MatButtonModule,
-    CommonModule
+    CommonModule,
+    MatDialogModule
   ],
   templateUrl: './classroom.component.html',
   styleUrl: './classroom.component.css'
@@ -65,7 +68,8 @@ export class ClassroomComponent {
     private courseService: CourseService,
     private teacherService: TeacherService,
     private careerService: CareerService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -110,16 +114,24 @@ export class ClassroomComponent {
     this.dataSource.filter = e.target.value.trim().toLowerCase();
   }
 
-  delete(id: number) {
-    this.classroomService.delete(id)
-      .pipe(switchMap(() => this.classroomService.findAll()))
-      .subscribe(data => {
-        this.classroomService.setClassroomChange(data);
-        this.classroomService.setMessageChange('Aula eliminada correctamente!');
-      });
+  delete(id: number, name: string) {
+    const dialogRef = this.dialog.open(ConfirmationDeleteComponent, {
+      data: { name: name }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.classroomService.delete(id)
+          .pipe(switchMap(() => this.classroomService.findAll()))
+          .subscribe(data => {
+            this.classroomService.setClassroomChange(data);
+            this.classroomService.setMessageChange('Aula eliminada correctamente!');
+          });
+      }
+    });
   }
 
-  formatRelation(id: number, type: 'course' | 'teacher' | 'career'): string {
+formatRelation(id: number, type: 'course' | 'teacher' | 'career'): string {
     let entity;
     switch (type) {
       case 'course':
@@ -127,6 +139,9 @@ export class ClassroomComponent {
         break;
       case 'teacher':
         entity = this.teachers.find(t => t.idTeacher === id);
+        if (entity) {
+          return `${entity.fatherLastname} ${entity.motherLastname}, ${entity.firstName} ${entity.secondName}`;
+        }
         break;
       case 'career':
         entity = this.careers.find(c => c.idCareer === id);

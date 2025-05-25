@@ -1,5 +1,4 @@
 <form class="example-container" [formGroup]="form" (submit)="operate()">
-    <!-- Campo NRC -->
     <mat-form-field>
         <input matInput 
                 placeholder="NRC" 
@@ -14,7 +13,6 @@
         </mat-error>
     </mat-form-field>
 
-    <!-- Lista Curso -->
     <mat-form-field>
         <mat-label>Curso</mat-label>
         <mat-select formControlName="idCourse" required>
@@ -27,7 +25,6 @@
         </mat-error>
     </mat-form-field>
 
-    <!-- Lista Profesor -->
     <mat-form-field>
         <mat-label>Profesor</mat-label>
         <mat-select formControlName="idTeacher" required>
@@ -40,7 +37,6 @@
         </mat-error>
     </mat-form-field>
 
-    <!-- Lista Carrera -->
     <mat-form-field>
         <mat-label>Carrera</mat-label>
         <mat-select formControlName="idCareer" required>
@@ -53,7 +49,6 @@
         </mat-error>
     </mat-form-field>
 
-    <!-- Campo Semestre -->
     <mat-form-field>
         <input matInput 
                placeholder="Semestre (Ej: 2024-1)" 
@@ -67,7 +62,6 @@
         </mat-error>
     </mat-form-field>
 
-    <!-- Campo Nivel -->
     <mat-form-field>
         <input matInput 
                type="number" 
@@ -78,13 +72,12 @@
             El nivel es obligatorio.
         </mat-error>
         <mat-error *ngIf="form.get('level')?.hasError('min') || form.get('level')?.hasError('max')">
-            El nivel debe estar entre 1 y 10.
+            El nivel debe estar entre 1 y 2.
         </mat-error>
     </mat-form-field>
 
     <mat-checkbox formControlName="status">Activo</mat-checkbox>
 
-    <!-- Botón Submit Deshabilitado si Formulario Inválido -->
     <button mat-button type="submit" [disabled]="form.invalid">
         <mat-icon>done</mat-icon>
         <span>Guardar</span>

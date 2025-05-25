@@ -30,9 +30,9 @@ export class CourseEditComponent {
   isEdit: boolean;
 
   constructor(
-    private route: ActivatedRoute, // ruta activa
+    private route: ActivatedRoute, 
     private courseService: CourseService,
-    private router: Router //no permite movernos de una página a otra
+    private router: Router 
   ){}
 
    ngOnInit(): void{
@@ -40,13 +40,13 @@ export class CourseEditComponent {
       idCourse: new FormControl(),
       code: new FormControl('', [
         Validators.required,
-        Validators.pattern(/^[A-Z0-9]{5}$/), // 5 caracteres alfanuméricos en mayúsculas
+        Validators.pattern(/^[A-Z0-9]{5}$/),
       ]),
       name: new FormControl('', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(100),
-        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/) // Solo letras y espacios
+        Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/) 
       ])
     });
     this.route.params.subscribe(data => {
@@ -59,7 +59,7 @@ export class CourseEditComponent {
    initForm() {
     if (this.isEdit) {
       this.courseService.findById(this.id).subscribe((data) => {
-        this.form.patchValue({ // Usar patchValue en lugar de crear nuevo FormGroup
+        this.form.patchValue({ 
           idCourse: data.idCourse,
           code: data.code,
           name: data.name
@@ -71,15 +71,10 @@ export class CourseEditComponent {
   operate(){
     const course: Course = new Course();
     course.idCourse = this.form.value['idCourse'];
-    // const x = this.form.controls['idCourse'].value;
-    // const y = this.form.get('idCourse').value;
     course.code = this.form.value['code'];
     course.name = this.form.value['name'];
 
-    if(this.isEdit){
-      //EDIT
-      // this.courseService.update(this.id, course).subscribe();
-      // PRACTICA COMUN, NO IDEAL      
+    if(this.isEdit){     
       this.courseService.update(this.id, course).subscribe(() => {
         this.courseService.findAll().subscribe(data => {
           this.courseService.setCourseChange(data);
@@ -88,9 +83,6 @@ export class CourseEditComponent {
       });
 
     }else{
-      //SAVE
-      // this.courseService.save(course).subscribe();
-      // PRACTICA IDEAL
       this.courseService.save(course)
         .pipe(switchMap(() => this.courseService.findAll()))
         .subscribe(data => {
